@@ -1,6 +1,7 @@
 const client = require('../lib/client');
 const usersData = require('./users.js');
 const groceryList = require('./grocery-list.js');
+const typeData = require('./type-id.js');
 
 run();
 
@@ -8,6 +9,17 @@ async function run() {
 
   try {
     await client.connect();
+
+    await Promise.all(
+      typeData.map(type => {
+        return client.query(`
+                      INSERT INTO type (type_id)
+                      VALUES ($1)
+                      RETURNING *;
+                  `,
+        [type.type_id]);
+      })
+    );
 
     const users = await Promise.all(
       usersData.map(user => {
@@ -25,10 +37,10 @@ async function run() {
     await Promise.all(
       groceryList.map(groceryItem => {
         return client.query(`
-                    INSERT INTO grocery_list (name, amount, is_cheap, type, owner_id )
+                    INSERT INTO grocery_list (name, amount, is_cheap, type_id, owner_id )
                     VALUES ($1, $2, $3, $4, $5);
                 `,
-        [groceryItem.name, groceryItem.amount, groceryItem.isCheap, groceryItem.type, user.id]);
+        [groceryItem.name, groceryItem.amount, groceryItem.isCheap, groceryItem.type_id, user.id]);
       })
     );
     

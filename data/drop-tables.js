@@ -9,6 +9,7 @@ async function run() {
     
     await client.query(`
             DROP TABLE IF EXISTS users CASCADE;
+            DROP TABLE IF EXISTS type CASCADE;
             DROP TABLE IF EXISTS grocery_list;
         `);
 

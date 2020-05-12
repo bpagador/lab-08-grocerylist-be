@@ -15,14 +15,19 @@ async function run() {
                     id SERIAL PRIMARY KEY,
                     email VARCHAR(256) NOT NULL,
                     hash VARCHAR(512) NOT NULL
-                );           
+                );
+                CREATE TABLE type (
+                  id SERIAL PRIMARY KEY,
+                  type_id VARCHAR(256) NOT NULL
+              );             
                 CREATE TABLE grocery_list (
                     id SERIAL PRIMARY KEY NOT NULL,
                     name VARCHAR(512) NOT NULL,
-                    type VARCHAR(512) NOT NULL,
+                    type_id INTEGER NOT NULL REFERENCES type(id),
                     amount INTEGER NOT NULL,
                     owner_id INTEGER NOT NULL REFERENCES users(id),
                     is_cheap BOOLEAN NOT NULL
+
             );
         `);
 
